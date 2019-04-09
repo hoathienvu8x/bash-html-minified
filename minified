@@ -1,0 +1,46 @@
+#!/bin/bash
+
+template_dir="${1:-}"
+dest_dir="${2:-}"
+
+if [ "$template_dir" == "" ]; then
+    template_dir=`pwd`/tmpl
+fi
+
+if [ "$dest_dir" == "" ]; then
+    dest_dir=`pwd`/min
+fi
+
+echo "Check template directory is exists ?"
+
+if [ ! -d "$template_dir" ]; then
+    echo "Template folder is not exists"
+    exit
+fi
+
+echo "Ok, template directory exists. Let't make template minified"
+
+if [ ! -d "$dest_dir" ]; then
+    echo "Template minified destination not exists make it"
+    mkdir -p $dest_dir
+fi
+
+# Loop html template in template directory
+
+for file in `find $template_dir/ -name "*.html"`;
+do
+    if [[ $(du -k "$file" | cut -f 1) -ne 0 ]]; then # File size not equa 0
+        newfile=`basename $file`
+        echo "Copy $file to $dest_dir/$newfile"
+        cp -rf $file $dest_dir/$newfile
+        # Ref: https://www.cyberciti.biz/faq/sed-remove-m-and-line-feeds-under-unix-linux-bsd-appleosx/
+        sed -i ':a;N;$!ba;s/\n//g' $dest_dir/$newfile
+        sed -i 's/\t/ /g' $dest_dir/$newfile # Tab character
+        sed -i 's/    //g' $dest_dir/$newfile # Tab by space
+        # https://stackoverflow.com/a/37823116 (Trim last newline end of file)
+        echo -n $(cat $dest_dir/$newfile) > $dest_dir/$newfile
+        echo " -> Done"
+    else
+        echo "File $file is empty content"
+    fi
+done
