@@ -29,14 +29,14 @@ fi
 
 for file in `find $template_dir/ -name "*.html"`;
 do
-    if [[ $(du -k "$file" | cut -f 1) -ne 0 ]]; then # File size not equa 0
+    if [[ $(du -k "$file" | cut -f 1) -ne 0 ]]; then # File size not equal 0
         newfile=`basename $file`
         echo "Copy $file to $dest_dir/$newfile"
         cp -rf $file $dest_dir/$newfile
         # Ref: https://www.cyberciti.biz/faq/sed-remove-m-and-line-feeds-under-unix-linux-bsd-appleosx/
         sed -i ':a;N;$!ba;s/\n//g' $dest_dir/$newfile
         sed -i 's/\t/ /g' $dest_dir/$newfile # Tab character
-        sed -i 's/    //g' $dest_dir/$newfile # Tab by space
+        sed -i 's/    //g' $dest_dir/$newfile # Tab by spaces (4 spaces mean 1 tab indent)
         # https://stackoverflow.com/a/37823116 (Trim last newline end of file)
         echo -n $(cat $dest_dir/$newfile) > $dest_dir/$newfile
         echo " -> Done"
