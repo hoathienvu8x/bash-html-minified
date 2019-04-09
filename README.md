@@ -20,4 +20,12 @@ With parameters
  
  2) `destination_result` : The destination folder to store minified result
 
+To get source please using command
+
+```bash
+git clone https://github.com/hoathienvu8x/bash-html-minified
+```
+
+Thanks for using my script, hope this help for your.
+
 ### That is not best solution, but it worked for me @@
